@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 #Descripcion de los variables que tiene cada nodo
-import binario as binario
-
 
 class  CaracterCantidad():
 	"""docstring for  CaracterCantidad"""
@@ -12,10 +10,12 @@ class  CaracterCantidad():
 		self.cantidad=cant
 
 
-class Retorno():
+class Llave():
+	def __init__(self):
+		self.caracter=""
+		self.binario=""
 
-	def agregarValores(self,nodo,caracter, binario):
-		self.nodo=nodo
+	def agregarValores(self,caracter, binario):
 		self.caracter=caracter
 		self.binario=binario
 
@@ -24,12 +24,12 @@ class Nodo():
 	"""docstring for nodo"""
 
 	def __init__(self):
-		self.bandera=0
+		self.bandera=1
 		self.visitado=False
 
 	def agregarHijoIzq(self,nodo):
 		self.nodoIzq=nodo
-		self.nodoIzq.bandera=1
+		self.nodoIzq.bandera=0
 
 	def agregarHijoDer(self,nodo):
 		self.nodoDer=nodo
@@ -113,7 +113,6 @@ class Pila():
 			cont = CaracterCantidad()
 			cont.agregarValores("vacio", listaX[0].contenido.cantidad+listaX[1].contenido.cantidad)
 			nodo.AgregarContenido(cont)
-			print nodo.bandera
 			try:
 				print "caracter hijo Izq: "+chr(listaX[0].contenido.caracter)
 			except:
@@ -123,6 +122,7 @@ class Pila():
 			self.nuevaLista=[]
 			insertadoNodo = False
 			if(len(listaX)==2):
+				nodo.bandera=None
 				self.nuevaLista.insert(y,nodo)
 			else:
 				while(x<len(listaX)):
@@ -133,6 +133,7 @@ class Pila():
 							self.nuevaLista.insert(y,nodo)
 							y=y+1
 							self.nuevaLista.insert(y, listaX[x])
+
 							insertadoNodo= True
 						else:
 							if(nodo.contenido.cantidad==listaX[x].contenido.cantidad):
@@ -158,66 +159,48 @@ class Pila():
 		self.Nlista=self.crearArbol1(self.lista,1)
 		self.lista=self.Nlista
 
-	def recorrerArbol(self,nodo,x,binario):
-		retorno=Retorno()
-		nNodo=nodo
-		hijoIzqVisitado=False
-		hijoDerVisitado=False
-		try:
-			print "try"
-			print str(x) +chr(nodo.contenido.caracter)+str(nodo.contenido.cantidad)
-			self.binario = binario + str(nodo.bandera)
-			print self.binario
-		except:
-			print "EXCEPT"
-			print str(x) + str(nodo.contenido.caracter) + str(nodo.contenido.cantidad)
-			self.binario = binario + str(nodo.bandera)
-		x=x+1
-		try:
-			if(nodo.nodoizq.visitado==False):
-				self.binario=binario+str(nodo.contenido.bandera)
-				print "izquierdo"
-				regreso= self.recorrerArbol(nodo.nodoIzq,x+1,self.binario)
-			else:
-				nNodo.hijoIzqVisitado=True
+	def recorrerArbol(self,nodo,binario):
+		print str(nodo.bandera)
+		if nodo.bandera!=None:
+			binario1 = binario + str(nodo.bandera)
+		if(nodo.contenido.caracter !="vacio"):
+			llaveUnica = Llave()
+			llaveUnica.agregarValores(nodo.contenido.caracter,binario1)
+			self.llave.insert(len(self.llave),llaveUnica)
+		else:
 			try:
-				if(nodo.nodoDer.visitado==False):
-					print "derecho"
-					regreso=self.recorrerArbol(nodo.nodoDer, x+1,self.binario)
-				else:
-					nNodo.hijoDerVisitado=True
+				self.recorrerArbol(nodo.nodoIzq,binario1)
+			except :
+				pass
+			try:
+				self.recorrerArbol(nodo.nodoDer,binario1)
 			except:
-				nNodo.hijoDerVisitado=True
-		except:
-			nNodo.hijoIzqVisitado=True
-
-		try:
-			if(nodo.nodoDer.visitado==False):
-				print "derecho"
-				self.retorno=self.recorrerArbol(nodo.nodoDer, x+1,self.binario)
-			else:
-				nNodo.hijoDerVisitado=True
-		except AttributeError, e:
-			nNodo.hijoDerVisitado=True
-		if(nodo.contenido.caracter!="vacio"):
-			retorno.caracter=nodo.contenido.caracter
-			nNodo.visitado=True
-			retorno.binario=self.binario
-		if (hijoDerVisitado == True and hijoIzqVisitado == True):
-			nNodo.visitado = True
-		retorno.nodo=nNodo
-		return retorno
-
+				pass
 
 	def recorrerArbol1(self):
+		self.llave=[]
 		print "arbol"
-		self.recorrerArbol(self.lista[0],1,"")
+		nodoP=self.lista[0]
+		self.recorrerArbol(nodoP,"")
+		print len(self.llave)
+		for x in self.llave:
+			print chr(x.caracter)+" "+str(x.binario)
 
+	def convinar(self,cadena):
+		self.cadena= cadena
+		encriptBinario=""
+		for caracter in self.cadena:
+			for llave in self.llave:
+				if(int(ord(caracter)) == llave.caracter):
+					encriptBinario=encriptBinario+llave.binario
+		print encriptBinario
 class Algoritmo():
 	def crearPila(self):
 		self.pila = Pila()
 		self.pila.crearLista()
 	def recorrerCadena(self,cadena):
+		self.cadena =cadena
+
 		for caracter in cadena:
 			self.convertirElemento(caracter)
 		self.pila.imprimirLista()
@@ -225,6 +208,7 @@ class Algoritmo():
 		self.pila.imprimirLista()
 		self.pila.crearArbol()
 		self.pila.recorrerArbol1()
+		self.pila.convinar(cadena)
 	def convertirElemento(self,letra):
 		letra2= int(ord(letra))
 		self.pila.insertarElemento(letra2)
@@ -233,7 +217,3 @@ cadena = raw_input('Introduce una cadena de texto: ')
 algoritmo = Algoritmo()
 algoritmo.crearPila()
 algoritmo.recorrerCadena(cadena)
-
-
-
-
