@@ -19,6 +19,11 @@ class Llave():
 		self.caracter=caracter
 		self.binario=binario
 
+class Encriptamiento():
+	def __init__(self,llave,encriptamiento):
+		self.llave = llave
+		self.encriptaminto = encriptamiento
+
 
 class Nodo():
 	"""docstring for nodo"""
@@ -133,7 +138,6 @@ class Pila():
 							self.nuevaLista.insert(y,nodo)
 							y=y+1
 							self.nuevaLista.insert(y, listaX[x])
-
 							insertadoNodo= True
 						else:
 							if(nodo.contenido.cantidad==listaX[x].contenido.cantidad):
@@ -163,6 +167,8 @@ class Pila():
 		print str(nodo.bandera)
 		if nodo.bandera!=None:
 			binario1 = binario + str(nodo.bandera)
+		else:
+			binario1 =binario
 		if(nodo.contenido.caracter !="vacio"):
 			llaveUnica = Llave()
 			llaveUnica.agregarValores(nodo.contenido.caracter,binario1)
@@ -170,7 +176,7 @@ class Pila():
 		else:
 			try:
 				self.recorrerArbol(nodo.nodoIzq,binario1)
-			except :
+			except:
 				pass
 			try:
 				self.recorrerArbol(nodo.nodoDer,binario1)
@@ -194,6 +200,7 @@ class Pila():
 				if(int(ord(caracter)) == llave.caracter):
 					encriptBinario=encriptBinario+llave.binario
 		print encriptBinario
+		return encriptBinario
 class Algoritmo():
 	def crearPila(self):
 		self.pila = Pila()
@@ -208,12 +215,47 @@ class Algoritmo():
 		self.pila.imprimirLista()
 		self.pila.crearArbol()
 		self.pila.recorrerArbol1()
-		self.pila.convinar(cadena)
+		self.encriptadoBinario = self.pila.convinar(cadena)
+		print self.encriptadoBinario
+		self.crearEncriptamiento()
+		encriptado =  Encriptamiento(self.pila.llave,self.encriptadoFull)
+		return  encriptado
 	def convertirElemento(self,letra):
 		letra2= int(ord(letra))
 		self.pila.insertarElemento(letra2)
+	def crearEncriptamiento(self):
+		cadenaBinaria=""
+		self.encriptadoFull=""
+		a=0
+		print a
+		for binario in self.encriptadoBinario:
+			if(a==0):
+				cadenaBinaria=""
+				a=a+1
+			if(a<8):
+				print "d"
+				cadenaBinaria=cadenaBinaria+binario
+				a=a+1
+			else:
+				cadenaBinaria = cadenaBinaria + binario
+				print "g"
+				print cadenaBinaria
+				print int(cadenaBinaria,2)
+				print chr(int(cadenaBinaria,2))
+				self.encriptadoFull=self.encriptadoFull+chr(int(cadenaBinaria,2))
+				a=0
+		print "p"
+		print a
+		if (a<8 and a!=0):
+			for x in [a, 8]:
+				cadenaBinaria=cadenaBinaria+"0"
+			print cadenaBinaria
+			self.encriptadoFull = self.encriptadoFull + chr(int(cadenaBinaria, 2))
+		print "h"
+		print self.encriptadoFull
 
 cadena = raw_input('Introduce una cadena de texto: ')
 algoritmo = Algoritmo()
 algoritmo.crearPila()
-algoritmo.recorrerCadena(cadena)
+encriptamiento = algoritmo.recorrerCadena(cadena)
+print chr(210)
