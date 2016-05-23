@@ -65,12 +65,6 @@ class Pila():
 		else:
 			self.lista[i].contenido.cantidad=self.lista[i].contenido.cantidad+1
 
-	def imprimirLista(self):
-			print "pila"
-			numero=0
-			for	elemento in self.lista:
-				print str(numero)+" "+chr(elemento.contenido.caracter)+" "+str(elemento.contenido.cantidad)
-				numero= numero + 1
 
 	def ordenar(self):
 		self.nuevaLista=[]
@@ -107,21 +101,15 @@ class Pila():
 		self.lista=self.nuevaLista
 
 	def crearArbol1(self,listaX,iteracion):
-		print "iteracion "+str(iteracion)
 		if len(listaX)==1:
 			return listaX
 		else:
-			print str(len(listaX))
 			nodo = Nodo()
 			nodo.agregarHijoIzq(listaX[0])
 			nodo.agregarHijoDer(listaX[1])
 			cont = CaracterCantidad()
 			cont.agregarValores("vacio", listaX[0].contenido.cantidad+listaX[1].contenido.cantidad)
 			nodo.AgregarContenido(cont)
-			try:
-				print "caracter hijo Izq: "+chr(listaX[0].contenido.caracter)
-			except:
-				print "caracter hijo Izq: " + str(listaX[0].contenido.caracter)
 			x=2
 			y=0
 			self.nuevaLista=[]
@@ -134,7 +122,6 @@ class Pila():
 					len(listaX)
 					if(insertadoNodo==False):
 						if(nodo.contenido.cantidad<listaX[x].contenido.cantidad):
-							print "nodo"
 							self.nuevaLista.insert(y,nodo)
 							y=y+1
 							self.nuevaLista.insert(y, listaX[x])
@@ -151,20 +138,16 @@ class Pila():
 									insertadoNodo = True
 								self.nuevaLista.insert(y,listaX[x])
 					else:
-						print "caracter"
 						self.nuevaLista.insert(y,listaX[x])
 					y = y + 1
 					x = x + 1
 			return self.crearArbol1(self.nuevaLista,iteracion=iteracion+1)
 
 	def crearArbol(self):
-		print "crear arbol"
-		print str(len(self.lista))
 		self.Nlista=self.crearArbol1(self.lista,1)
 		self.lista=self.Nlista
 
 	def recorrerArbol(self,nodo,binario):
-		print str(nodo.bandera)
 		if nodo.bandera!=None:
 			binario1 = binario + str(nodo.bandera)
 		else:
@@ -185,12 +168,9 @@ class Pila():
 
 	def recorrerArbol1(self):
 		self.llave=[]
-		print "arbol"
 		nodoP=self.lista[0]
 		self.recorrerArbol(nodoP,"")
-		print len(self.llave)
-		for x in self.llave:
-			print chr(x.caracter)+" "+str(x.binario)
+
 
 	def convinar(self,cadena):
 		self.cadena= cadena
@@ -199,7 +179,6 @@ class Pila():
 			for llave in self.llave:
 				if(int(ord(caracter)) == llave.caracter):
 					encriptBinario=encriptBinario+llave.binario
-		print encriptBinario
 		return encriptBinario
 class Algoritmo():
 	def crearPila(self):
@@ -210,13 +189,10 @@ class Algoritmo():
 
 		for caracter in cadena:
 			self.convertirElemento(caracter)
-		self.pila.imprimirLista()
 		self.pila.ordenar()
-		self.pila.imprimirLista()
 		self.pila.crearArbol()
 		self.pila.recorrerArbol1()
 		self.encriptadoBinario = self.pila.convinar(cadena)
-		print self.encriptadoBinario
 		self.crearEncriptamiento()
 		encriptado =  Encriptamiento(self.pila.llave,self.encriptadoFull)
 		return  encriptado
@@ -227,35 +203,23 @@ class Algoritmo():
 		cadenaBinaria=""
 		self.encriptadoFull=""
 		a=0
-		print a
 		for binario in self.encriptadoBinario:
 			if(a==0):
 				cadenaBinaria=""
 				a=a+1
 			if(a<8):
-				print "d"
 				cadenaBinaria=cadenaBinaria+binario
 				a=a+1
 			else:
 				cadenaBinaria = cadenaBinaria + binario
-				print "g"
-				print cadenaBinaria
-				print int(cadenaBinaria,2)
-				print chr(int(cadenaBinaria,2))
 				self.encriptadoFull=self.encriptadoFull+chr(int(cadenaBinaria,2))
 				a=0
-		print "p"
-		print a
 		if (a<8 and a!=0):
 			for x in [a, 8]:
 				cadenaBinaria=cadenaBinaria+"0"
-			print cadenaBinaria
 			self.encriptadoFull = self.encriptadoFull + chr(int(cadenaBinaria, 2))
-		print "h"
-		print self.encriptadoFull
 
 cadena = raw_input('Introduce una cadena de texto: ')
 algoritmo = Algoritmo()
 algoritmo.crearPila()
 encriptamiento = algoritmo.recorrerCadena(cadena)
-print chr(210)
